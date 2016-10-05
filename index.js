@@ -97,6 +97,7 @@ app.use(cors());
 
 // get current faucet info
 app.get('/', function(req, res) {
+	console.log('get root');
 	var etherbalance = -1;
 	try {
 		etherbalance = getFaucetBalance();
