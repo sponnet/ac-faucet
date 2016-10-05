@@ -261,9 +261,6 @@ function donate(to, cb) {
 				console.log(result);
 			}
 
-			return cb(err, result);
-
-
 		});
 
 		var MyContract = web3.eth.contract(localcoincontract.abi);
@@ -285,6 +282,7 @@ function donate(to, cb) {
 					console.log("Transaction Successful!");
 					console.log('TXhash=', result);
 				}
+				return cb(err, result);
 			}
 		);
 
