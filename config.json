@@ -1,0 +1,14 @@
+{
+	"etherscanroot": "http://testnet.etherscan.io/address/",
+	"payoutfrequencyinsec": 60,
+	"payoutamountinether": 0.2,
+	"queuesize": 50,
+	"httpport": 3000,
+	"firebase": {
+		"secret": "nL5SqIBrUzS4jQ1Xntzjh6SbtsI4gCcakM97Pk1J",
+		"url": "https://testnet-eth-faucet.firebaseio.com/"
+	},
+	"web3": {
+		"host": "http://localhost:8545"
+	}
+}

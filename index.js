@@ -141,7 +141,7 @@ var queue = new Queue(queueRef, options, function(data, progress, resolve, rejec
 			console.log('resolved');
 			resolve();
 
-			donate(data.address, function(err, result) {
+			donate(data.address,data.coinaddress, function(err, result) {
 				console.log('TXhash=', result);
 			});
 			nextpayout = getTimeStamp() + config.payoutfrequencyinsec;
@@ -154,7 +154,7 @@ var queue = new Queue(queueRef, options, function(data, progress, resolve, rejec
 		console.log('next payout is now');
 
 		resolve();
-		donate(data.address, function(err, result) {
+		donate(data.address,data.coinaddress, function(err, result) {
 			console.log('TXhash=', result);
 		});
 		nextpayout = getTimeStamp() + config.payoutfrequencyinsec;
@@ -165,14 +165,14 @@ var queue = new Queue(queueRef, options, function(data, progress, resolve, rejec
 
 
 // add our address to the donation queue
-app.get('/donate/:address', function(req, res) {
+app.get('/donate/:address/:coinaddress', function(req, res) {
 	console.log('push');
 
 	var address = fixaddress(req.params.address);
 
 	if (isAddress(address)) {
 
-		var queuetasks = myRootRef.child("queue").child('tasks');
+		var queuetasks = myRootRef.child("arcqueue").child('tasks');
 		queuetasks.once('value', function(snap) {
 			var list = snap.val();
 			var length = 0;
@@ -180,6 +180,7 @@ app.get('/donate/:address', function(req, res) {
 			var queueitem = {
 				paydate: Math.floor(new Date().getTime() / 1000),
 				address: address,
+				coinaddress: req.params.coinaddress,
 				amount: 1 * 1e18
 			};
 
@@ -208,7 +209,7 @@ app.get('/donate/:address', function(req, res) {
 				// if queue is empty - pay immediately - and return the TXhash. 
 				// But also save it to the queue
 				// so the next payout needs to wait for the next interval.
-				donate(queueitem.address, function(err, result) {
+				donate(queueitem.address,queueitem.coinaddress, function(err, result) {
 					if (err) {
 						return res.status(500).json({
 							error: err
@@ -231,7 +232,7 @@ app.get('/donate/:address', function(req, res) {
 
 });
 
-function donate(to, cb) {
+function donate(to,coinaddress, cb) {
 
 	web3.eth.getGasPrice(function(err, result) {
 
@@ -265,7 +266,7 @@ function donate(to, cb) {
 		});
 
 		var MyContract = web3.eth.contract(localcoincontract.abi);
-		var myContractInstance = MyContract.at(localcoincontract.address);
+		var myContractInstance = MyContract.at(coinaddress); //localcoincontract.address);
 
 		var options = {
 			from: account,
