@@ -123,7 +123,7 @@ var options = {
 	numWorkers: 1
 };
 
-var queueRef = myRootRef.child("arcqueue");
+var queueRef = myRootRef.child("arcqueue"+Date.now());
 
 var nextpayout = getTimeStamp();
 
@@ -172,7 +172,7 @@ app.get('/donate/:address/:coinaddress', function(req, res) {
 
 	if (isAddress(address)) {
 
-		var queuetasks = myRootRef.child("arcqueue").child('tasks');
+		var queuetasks = queueRef.child('tasks');
 		queuetasks.once('value', function(snap) {
 			var list = snap.val();
 			var length = 0;
