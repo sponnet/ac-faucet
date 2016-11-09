@@ -70,6 +70,8 @@ myRootRef.authWithCustomToken(config.firebase.secret, function(error, authData) 
 
 				account = fixaddress(keystore.getAddresses()[0]);
 
+				console.log('Account balance= ETH',web3.fromWei(web3.eth.getBalance(account),'ether').toNumber());
+
 				// start webserver...
 				app.listen(config.httpport, function() {
 					console.log('Fawcet listening on port ', config.httpport);
